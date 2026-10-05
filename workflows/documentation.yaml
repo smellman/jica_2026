@@ -1,0 +1,46 @@
+name: GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+      
+      - run: mkdir -p public
+      - run: touch public/.nojekyll
+      - run: cp -fr images public/images
+      - run: npx -y @marp-team/marp-cli@latest jica-seminar-2026.md -o public/index.html
+      - run: npx -y @marp-team/marp-cli@latest jica-seminar-2026.md -o public/jica-seminar-2026.pptx --allow-local-files
+      - run: npx -y @marp-team/marp-cli@latest jica-seminar-2026.md -o public/jica-seminar-2026.pdf --allow-local-files
+      - name: Deploy
+        id: deployment
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: './public'
+  deploy:
+    runs-on: ubuntu-24.04
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
