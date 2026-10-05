@@ -5,7 +5,7 @@ footer: 'JICA Seminar 2026'
 paginate: true
 ---
 
-# Create / distribute tiled map
+# Creating and Distributing Tiled Maps
 
 ## Taro Matsuzawa
 ### Geolonia Inc.
@@ -14,24 +14,24 @@ paginate: true
 
 # Notes
 
-- This presentation use some command line tools
-  - Open following link in your browser.
-  - Copy and paste the command line to your terminal.
+- This presentation uses some command-line tools.
+  - Open the following link in your browser.
+  - Copy and paste the commands into your terminal.
 
 https://smellman.github.io/jica_2026/
 
 ---
 
-# Self introduction
+# Self-introduction
 
 - GIS Engineer at Geolonia Inc.
-  - Programming: Python, JavaScript, TypeScript, Ruby etc.
+  - Programming: Python, JavaScript, TypeScript, Ruby, etc.
   - UNIX and Linux guru
-  - GIS skill: Data processing, Tiled based Map
+  - GIS skills: Data processing, Tiled maps
 - Community
   - Director of [OSGeo.JP](https://www.osgeo.jp/)
   - Director of [OpenStreetMap Foundation Japan](https://www.osmf.jp/)
-  - Sub president of [Japan Unix Society](https://www.jus.or.jp/)
+  - Vice President of [Japan Unix Society](https://www.jus.or.jp/)
   - [UNOpenGIS/7](https://github.com/UNopenGIS/7) volunteer
 - Contact: taro.matsuzawa@geolonia.com / @smellman on X
 
@@ -40,8 +40,8 @@ https://smellman.github.io/jica_2026/
 # Today's agenda
 
 - System setup
-- What is tiled map?
-- Introduction of software and data in this presentation
+- What is a tiled map?
+- Software and data used in this presentation
 - How to create your own tiled map
 - How to design your own tiled map
 - How to distribute your own tiled map
@@ -50,8 +50,8 @@ https://smellman.github.io/jica_2026/
 
 # System setup
 
-- This presentation requires Linux based OS.
-  - Use Raspberry Pi 4 in this seminar.
+- This presentation requires a Linux-based OS.
+  - We use a Raspberry Pi 4 in this seminar.
 
 ---
 
@@ -60,8 +60,8 @@ https://smellman.github.io/jica_2026/
 https://hackmd.io/@smartmaps/26
 
 - Connect to SSID "vectortiles"
-- Launch your terminal application. (Powershell)
-- Access to your host.
+- Launch your terminal application (PowerShell).
+- Connect to your device via SSH.
 
 ```Powershell
 ssh niroku@<your ip>
@@ -71,7 +71,7 @@ ssh niroku@<your ip>
 
 # System setup - Prepare your device
 
-`niroku` is installer for this seminar.
+`niroku` is the installer for this seminar.
 
 https://github.com/unvt/niroku
 
@@ -81,7 +81,7 @@ wget -qO- https://unvt.github.io/niroku/install.sh | sudo -E bash -
 
 ---
 
-# System setup - checkout this seminar repository
+# System setup - Clone the seminar repository
 
 ```bash
 git clone https://github.com/smellman/jica_scripts.git
@@ -91,31 +91,31 @@ sudo make
 
 ---
 
-# What is tiled map?
+# What is a tiled map?
 
 ---
 
 # Tile technology
 
-- Provide map image or data over the internet.
-  - Map images are separated as tiles.
-  - Zoom Level 0 = World
-  - Each zoom level doubles in the dimensions.
-  - Too many tiles use "Web Mercator" projection.
+- Provides map images or data over the Internet.
+  - Map images are divided into tiles.
+  - Zoom level 0 = the whole world
+  - Each zoom level doubles the width and height.
+  - Most tiles use the "Web Mercator" projection.
 
 ![bg right 80%](./images/0.png)
 https://a.tile.openstreetmap.org/0/0/0.png
 
 ---
 
-# Useful to web
+# Well suited to the web
 
-- Structure of tile is useful for web.
-  - Enable to scroll map smoothly.
-  - Enable to zoom up and zoom down map smoothly.
-  - HTTP GET request.
-- Tile become known for Google Maps.
-  - Tile has existed from the late 1990s.
+- The tile structure is well suited to the web.
+  - Enables smooth map scrolling.
+  - Enables smooth zooming in and out.
+  - Uses simple HTTP GET requests.
+- Tiles became widely known through Google Maps.
+  - Tiles have existed since the late 1990s.
 
 ---
 
@@ -134,14 +134,14 @@ https://maps.gsi.go.jp/help/image/tileNum.png
 
 # GET Request
 
-- Many services use REST API(GET Request).
+- Many services use a REST API (GET requests).
   - https://.../Z/X/Y.Format
   - Z: Zoom Level
   - X: X coordinate
   - Y: Y coordinate
   - Format: 
-    - Raster image format(png, jpg, webp)
-    - Vector data format(pbf, mvt)
+    - Raster image formats (png, jpg, webp)
+    - Vector data formats (pbf, mvt)
 
 ---
 
@@ -158,13 +158,13 @@ https://maps.gsi.go.jp/help/image/tileNum.png
 # Specification
 
 - Two tile service specifications are popular.
-  - Tile Map Service(TMS)
-  - Web Map Tile Service(WMTS)
+  - Tile Map Service (TMS)
+  - Web Map Tile Service (WMTS)
 - TMS is simpler than WMTS.
-- TMS's X Y coordinate is started from bottom left.
-  - Same as Cartesian coordinate system.
-- WMTS's X Y coordinate is started from top left.
-  - Same as Coordinate system of 2D computer graphics.
+- TMS X/Y coordinates start from the bottom left.
+  - Same as the Cartesian coordinate system.
+- WMTS X/Y coordinates start from the top left.
+  - Same as the coordinate system of 2D computer graphics.
 
 ---
 
@@ -172,13 +172,13 @@ https://maps.gsi.go.jp/help/image/tileNum.png
 
 ---
 
-# The Y coordinate flipped
+# The flipped Y coordinate
 
-- OpenStreetMap use TMS like protocol but Y coordinate is numbered from top.
-  - OpenStreetMap call "Slippy Map".
-  - We call xyz tile.
+- OpenStreetMap uses a TMS-like protocol, but the Y coordinate is numbered from the top.
+  - OpenStreetMap calls this a "Slippy Map".
+  - We call it an XYZ tile.
     - {z}/{x}/{y}.png
-    - Also we call zxy tile.
+    - Also called a ZXY tile.
 
 ![bg right 90%](https://maps.gsi.go.jp/help/image/tileNum.png)
 https://maps.gsi.go.jp/help/image/tileNum.png
@@ -187,22 +187,22 @@ https://maps.gsi.go.jp/help/image/tileNum.png
 
 # XYZ tile
 
-- De facto standard of tiled map.
+- The de facto standard for tiled maps.
   - Web Mercator projection
-  - Y coordinate flipped TMS
-  - Provide REST API
+  - TMS with a flipped Y coordinate
+  - Provides a REST API
     - {z}/{x}/{y}.{format}
-  - Anyone provide "Specification"
-- Too many libraries support XYZ tile.
-  - Leaflet, OpenLayers, Maplibre GL JS, Google Maps API etc.
+  - No one publishes a formal "specification".
+- Many libraries support XYZ tiles.
+  - Leaflet, OpenLayers, MapLibre GL JS, Google Maps API, etc.
 
 ---
 
 # Raster tile (1/3)
 
-- Provides "rendered image"
-  - The image doesn't have any "data".
-  - Focus to visualization.
+- Provides "rendered images"
+  - The image doesn't contain any "data".
+  - Focuses on visualization.
 
 ![bg right 90%](./images/3_openstreetmap.png)
 
@@ -210,9 +210,9 @@ https://maps.gsi.go.jp/help/image/tileNum.png
 
 # Raster tile (2/3)
 
-- Provides "Satellite images" or "Aerial photograph"
-  - Focus to photography.
-  - The image doesn't have any "data" too.
+- Provides "satellite images" or "aerial photographs"
+  - Focuses on photography.
+  - These images don't contain any "data" either.
 
 ![bg right 90%](./images/4_gsi_map_1.png)
 
@@ -220,11 +220,11 @@ https://maps.gsi.go.jp/help/image/tileNum.png
 
 # Raster tile (3/3)
 
-- Provides "data" as image.
-  - Focus to data.
-    - Population, Temperature, Rainfall, Elevation, etc.
-  - The image has "data" as color.
-    - Sample raster tiles contain the elevation value obtainable by calculating with RGB values.
+- Provides "data" as images.
+  - Focuses on data.
+    - Population, temperature, rainfall, elevation, etc.
+  - The image encodes "data" as colors.
+    - In this example, elevation values can be calculated from the RGB values.
 
 ![bg right 90%](./images/5_gsi_map_2.png)
 
@@ -232,9 +232,9 @@ https://maps.gsi.go.jp/help/image/tileNum.png
 
 # Vector tile (1/2)
 
-- Provides "Vector data"
-  - Each tile contains "Vector data".
-    - The tile like a data container.
+- Provides "vector data"
+  - Each tile contains "vector data".
+    - A tile works like a data container.
 
 ![bg right 90%](./images/6_vector_tile_example.png)
 
@@ -242,11 +242,11 @@ https://maps.gsi.go.jp/help/image/tileNum.png
 
 # Vector tile (2/2)
 
-- Vector tile doesn't have a style.
-  - The client renders images with style settings.
-    - Easy to rotation and bearing.
+- Vector tiles don't have a style.
+  - The client renders images based on style settings.
+    - Easy to rotate and tilt the map.
     - Supports 3D rendering.
-- Programmable.
+- Programmable
   - The client can change the style dynamically.
   - Interactive demo:
     - https://smellman.github.io/osm-sound-demo/
@@ -256,7 +256,7 @@ https://maps.gsi.go.jp/help/image/tileNum.png
 # Vector tile example - Multilingual
 
 - https://openmaptiles.org/languages/
-  - Enable to change main language dynamically.
+  - The main language can be changed dynamically.
 
 ![bg right 90%](./images/7_multilingual.png)
 
@@ -265,8 +265,8 @@ https://maps.gsi.go.jp/help/image/tileNum.png
 # Vector tile example - Geospatial Information Authority of Japan
 
 - https://maps.gsi.go.jp/vector/
-  - GSI provides vector tile.
-  - Enable to change style dynamically.
+  - GSI provides vector tiles.
+  - The style can be changed dynamically.
 
 ![bg right 90%](./images/8_gsi_map_vector.png)
 
@@ -274,12 +274,12 @@ https://maps.gsi.go.jp/help/image/tileNum.png
 
 # Mapbox Vector Tile
 
-- De facto standard of vector tile.
+- The de facto standard for vector tiles.
   - Vector tile specification by Mapbox Inc.
 - Specification
-  - A tile encoded by Protocol Buffer format.
-  - Desinged for Web Mercator projection.
-  - Supports Layers and Features.
+  - Tiles are encoded in Protocol Buffers format.
+  - Designed for the Web Mercator projection.
+  - Supports layers and features.
 
 https://docs.mapbox.com/data/tilesets/guides/vector-tiles-standards/
 
@@ -287,8 +287,8 @@ https://docs.mapbox.com/data/tilesets/guides/vector-tiles-standards/
 
 # Mapbox GL ecosystem and Style Specification
 
-- Mapbox provides Mapbox GL JS(Web), Mapbox GL Native(Smartphone and Desktop application).
-  - Mapbox provides specification of styling.
+- Mapbox provides Mapbox GL JS (Web) and Mapbox GL Native (smartphone and desktop applications).
+  - Mapbox also provides a styling specification.
 https://docs.mapbox.com/style-spec/guides/
 
 ![bg right 90%](./images/9_mapbox_gl_ecosystem.png)
@@ -297,21 +297,21 @@ https://docs.mapbox.com/style-spec/guides/
 
 # Note: Mapbox GL is proprietary software
 
-- Mapbox GL became proprietary software from end of 2020.
-  - Mapbox GL JS is OpenSource software until v1.5.
-  - Mapbox GL JS over v2 must require mapbox service’s token.
-- MapLibre GL ecosystems are fork of mapbox OpenSource versions.
+- Mapbox GL became proprietary software at the end of 2020.
+  - Mapbox GL JS was open-source software up to v1.13.
+  - Mapbox GL JS v2 and later require a Mapbox access token.
+- The MapLibre GL ecosystem is a fork of the open-source versions of Mapbox GL.
   - https://maplibre.org/
-  - Highly recommend to use MapLibre GL JS now.
+  - We highly recommend using MapLibre GL JS now.
 
 ---
 
-# Tile support libraries - Javascript (1)
+# Tile support libraries - JavaScript (1)
 
 - Leaflet
   - https://leafletjs.com/
   - Lightweight and easy to use.
-  - Supports Mapbox Vector Tile with plugin.
+  - Supports Mapbox Vector Tile with a plugin.
 - OpenLayers
   - https://openlayers.org/
   - Difficult to use but powerful.
@@ -319,7 +319,7 @@ https://docs.mapbox.com/style-spec/guides/
 
 ---
 
-# Tile support libraries - Javascript (2)
+# Tile support libraries - JavaScript (2)
 
 - MapLibre GL JS
   - https://maplibre.org/
@@ -346,7 +346,7 @@ https://docs.mapbox.com/style-spec/guides/
   - https://maplibre.org/
   - Easy to use for Mapbox Vector Tile.
   - Supports raster xyz tile too.
-- Mapkit
+- MapKit
   - https://developer.apple.com/documentation/mapkit
   - Easy to use for raster xyz tile.
 
@@ -361,55 +361,55 @@ https://docs.mapbox.com/style-spec/guides/
 
 ---
 
-# Introduction of software and data in this presentation
+# Software and data used in this presentation
 
 ---
 
 # Requirements
 
-- This presentation requires Linux based OS.
-- Also, you can use Raspberry Pi 4.
+- This presentation requires a Linux-based OS.
+- You can also use a Raspberry Pi 4.
   - Raspberry Pi 4 is cheap and powerful.
-  - Raspberry Pi 4 is ARM64/aarch64 architecture.
+  - Raspberry Pi 4 uses the ARM64/aarch64 architecture.
   - Raspberry Pi 4 is easy to use for GIS.
-- My repository for this presentation supports only ARM64/aarch64 architecture.
+- My repository for this presentation supports only the ARM64/aarch64 architecture.
 
 ---
 
 # Software - GDAL/OGR
 
 - https://gdal.org/
-- GDAL/OGR is the most popular GIS library and provides command line tools.
-  - QGIS based on GDAL/OGR.
+- GDAL/OGR is the most popular GIS library and provides command-line tools.
+  - QGIS is built on GDAL/OGR.
 - GDAL/OGR supports many GIS data formats.
-- GDAL/OGR supports raster xyz tile.
+- GDAL/OGR supports raster XYZ tiles.
 
 ---
 
 # Note: GDAL interface changes
 
-- GDAL 3.11 or later use `gdal` command instead of `gdalinfo`, `gdal_translate`, `ogr2ogr` etc.
-  - Old commands are still available as symlink to `gdal` command.
-- This presentation use GDAL 3.10 so old commands are used.
+- GDAL 3.11 and later use the `gdal` command instead of `gdalinfo`, `gdal_translate`, `ogr2ogr`, etc.
+  - The old commands are still available.
+- This presentation uses GDAL 3.10, so we use the old commands.
 
 ---
 
 # Software - Tippecanoe
 
 - https://github.com/felt/tippecanoe/
-- Build vector tilesets from large (or small) collections of GeoJSON, FlatGeoBuf or CSV features.
+- Builds vector tilesets from large (or small) collections of GeoJSON, FlatGeobuf, or CSV features.
 - Tippecanoe is the most popular vector tile builder.
 
 ---
 
 # Software - Charites
 
-- Command line tool for writing Mapbox/MapLibre Vector Style Specification in YAML.
-  - Organized by The United Nation Vector Tile Toolkit(UNVT).
-- Charites convert Style Specification(JSON) to YAML.
-  - YAML is easy to read and write for human.
-  - YAML is easy to edit for beginners.
-- Charites enable to dynamic serving style.
+- A command-line tool for writing Mapbox/MapLibre Style Specification in YAML.
+  - Developed by the United Nations Vector Tile Toolkit (UNVT).
+- Charites converts between the Style Specification (JSON) and YAML.
+  - YAML is easy for humans to read and write.
+  - YAML is easy for beginners to edit.
+- Charites can serve styles dynamically for live preview.
 
 
 ---
@@ -417,7 +417,7 @@ https://docs.mapbox.com/style-spec/guides/
 # Software - editor
 
 - `nano` is a simple text editor.
-  - nano is easy to use for both beginners.
+  - nano is easy to use for beginners.
 - `vim` is a powerful text editor.
   - vim is difficult to use for beginners.
   - vim is easy to use for experts.
@@ -429,7 +429,7 @@ https://docs.mapbox.com/style-spec/guides/
 - make is a build automation tool.
 - make is easy to use for both beginners and experts.
 - make is a standard tool of UNIX and Linux.
-  - This presentation use make for build and deploy.
+  - This presentation uses make to build and deploy.
 
 ---
 
@@ -437,14 +437,14 @@ https://docs.mapbox.com/style-spec/guides/
 
 - caddy is a web server.
 - caddy is easy to use for beginners.
-  - This presentation use caddy for serving tiles.
+  - This presentation uses caddy to serve tiles.
 
 ---
 
 # Software - tileserver-gl-light
 
 - tileserver-gl-light is a vector tile server.
-- useful for inspecting vector tile.
+- Useful for inspecting vector tiles.
 
 
 ---
@@ -452,53 +452,52 @@ https://docs.mapbox.com/style-spec/guides/
 # Data - Global Map
 
 - Digital geographic information
-  - Provided by International Steering Committee for Global Mapping(ISCGM).
-  - Composed of 8 Data Sets
-    - Vector Data (Transportation, Boundaries, Darainage, Population Centre)
-    - Raster Data (Elevation, Vegetation, Land Cover, Land Use)
+  - Provided by the International Steering Committee for Global Mapping (ISCGM).
+  - Composed of 8 datasets
+    - Vector data (Transportation, Boundaries, Drainage, Population Centres)
+    - Raster data (Elevation, Vegetation, Land Cover, Land Use)
 - Free for non-commercial use.
 
 ---
 
-# Global Map - archive
+# Global Map - Archive
 
-- Archives and website were moved into github by GSI.
+- GSI moved the archives and website to GitHub.
   - https://github.com/globalmaps
   - https://globalmaps.github.io/
-- Old website was closed
-- Some countries provides global map archives at the national site.
+- The old website has been closed.
+- Some countries provide Global Map archives on their national sites.
   - All links: https://github.com/globalmaps/projectmanagement/blob/master/REPOS.md
 - Some links are dead now.
 
 ---
 
-# Global map – format
+# Global Map – Format
 
-- Vector data provide as Shapefile.
-  - It provided as Geography Markup Language (GML)
-format.
-- Raster data provide as GeoTiff file.
-  - It provided as Band interleaved by line (BIL) format.
+- Vector data is provided as Shapefiles.
+  - Originally provided in Geography Markup Language (GML) format.
+- Raster data is provided as GeoTIFF files.
+  - Originally provided in Band Interleaved by Line (BIL) format.
 
 ---
 
-# Data – Aerial photograph
+# Data – Aerial photographs
 
 - https://www.mlit.go.jp/plateau/
-- In Japan, Plateau Project release too many Aerial photograph data.
-  - Plateau released PointCloud, 3D data, and Aerial photograph.
-  - Aerial photograph is released as GeoTiff data. 
-    - It is good sample to create raster tile.
+- In Japan, Project PLATEAU has released a large amount of aerial photograph data.
+  - PLATEAU has released point clouds, 3D data, and aerial photographs.
+  - Aerial photographs are released as GeoTIFF data.
+    - They are good samples for creating raster tiles.
 
 ---
 
 # Data - OpenStreetMap
 
 - https://www.openstreetmap.org/
-- OpenStreetMap is the most popular OpenData.
-  - OpenStreetMap provides planet data as PBF format.
-- Today's presentation use OpenStreetMap data as sample data.
-  - Use small area data for easy to understand.
+- OpenStreetMap is the most popular open data project.
+  - OpenStreetMap provides planet data in PBF format.
+- Today's presentation uses OpenStreetMap data as sample data.
+  - We use data for a small area to keep it simple.
 
 ---
 
@@ -508,10 +507,10 @@ format.
   - https://github.com/globalmaps/gmlk10
 - Global Map Sri Lanka 2.0
   - https://github.com/globalmaps/gmlk20
-- Plateau Higashimurayama City in Tokyo GeoTIFF
+- PLATEAU GeoTIFF of Higashimurayama City, Tokyo
   - https://www.geospatial.jp/ckan/dataset/plateau-13213-higashimurayama-shi-2020
 - OpenStreetMap data
-  - https://tile.opensteetmap.jp/static/planet.pmtiles
+  - https://tile.openstreetmap.jp/static/planet.pmtiles
 
 
 ---
@@ -520,11 +519,11 @@ format.
 
 ---
 
-# Raster tile processing pattern 1: Global map (One GeoTIFF file)
+# Raster tile processing pattern 1: Global Map (one GeoTIFF file)
 
-- Download GeoTIFF file from Global Map archive.
+- Download a GeoTIFF file from the Global Map archive.
 - Enable transparency.
-- Convert GeoTIFF to XYZ tile using gdal2tiles.
+- Convert the GeoTIFF to XYZ tiles using gdal2tiles.
 
 ![height:300px](./images/10_gdal2tiles.png)
 
@@ -534,10 +533,10 @@ format.
 
 ```bash
 cd ~/jica_scripts/raster_tile_gm
-make fetch # Download GeoTIFF file from Global Map archive.
+make fetch # Download a GeoTIFF file from the Global Map archive.
 make transparent # Enable transparency.
-make generate_tile # Convert GeoTIFF to XYZ tile using gdal2tiles.
-make deploy # copy to caddy server directory.
+make generate_tile # Convert the GeoTIFF to XYZ tiles using gdal2tiles.
+make deploy # Copy to the caddy server directory.
 ```
 
 ---
@@ -556,14 +555,14 @@ generate_tile:
         gdal2tiles.py --xyz -s EPSG:4326 -z 0-11 temp.vrt
 
 deploy:
-	      sudo cp -r temp/ /opt/niroku/data/gmlk10/
+       sudo cp -r temp/ /opt/niroku/data/gmlk10/
 ```
 
 ---
 
 # How to read Makefile (2)
 
-Makefile is simple to run tasks.
+A Makefile makes it simple to run tasks.
 
 ```Makefile
 task_name:
@@ -575,16 +574,16 @@ task_name:
 
 # Result
 
-Access to http://<your ip>/gmlk10/leaflet.html
+Open http://<your ip>/gmlk10/leaflet.html
 
 ![height:300px](./images/11_gm_raster_tile.png)
 
 ---
 
-# Raster tile processing pattern 2: Plateau (Many GeoTIFF files)
+# Raster tile processing pattern 2: PLATEAU (many GeoTIFF files)
 
-- Generate VRT file from GeoTIFF files.
-- Convert VRT file to XYZ tile using gdal2tiles.
+- Generate a VRT file from the GeoTIFF files.
+- Convert the VRT file to XYZ tiles using gdal2tiles.
 
 ![height:300px](./images/12_gdal2tiles.png)
 
@@ -594,27 +593,27 @@ Access to http://<your ip>/gmlk10/leaflet.html
 
 ```bash
 cd ~/jica_scripts/raster_tile_plateau
-make fetch # Download GeoTIFF file from Plateau archive and unarchive
-make buildvrt # Generate VRT file from GeoTIFF files.
-make generate_tile # Convert VRT file to XYZ tile using gdal2tiles.
-make deploy # copy to caddy server directory.
+make fetch # Download GeoTIFF files from the PLATEAU archive and extract them.
+make buildvrt # Generate a VRT file from the GeoTIFF files.
+make generate_tile # Convert the VRT file to XYZ tiles using gdal2tiles.
+make deploy # Copy to the caddy server directory.
 ```
 
 ---
 
 # Result
 
-Access to http://<your ip>/plateau/leaflet.html
+Open http://<your ip>/plateau/leaflet.html
 
 ![height:300px](./images/13_plateau_raster_tile.png)
 
 ---
 
-# Vector tile processing pattern: Global map
+# Vector tile processing pattern: Global Map
 
-- Download Shapefile file from Global Map archive.
-- Convert Shapefile to GeoJSON using ogr2ogr.
-- Convert GeoJSON to Mapbox Vector Tile using tippecanoe.
+- Download Shapefiles from the Global Map archive.
+- Convert the Shapefiles to GeoJSON using ogr2ogr.
+- Convert the GeoJSON to Mapbox Vector Tiles using tippecanoe.
 
 ![height:300px](./images/14_tippecanoe.png)
 
@@ -624,17 +623,17 @@ Access to http://<your ip>/plateau/leaflet.html
 
 ```bash
 cd ~/jica_scripts/vector_tile
-make fetch # Download Shapefile file from Global Map archive.
-make convert # Convert Shapefile to GeoJSON using ogr2ogr.
-make generate # Convert GeoJSON to Mapbox Vector Tile using tippecanoe.
-make tileserver-gl # run tileserver-gl-light
+make fetch # Download Shapefiles from the Global Map archive.
+make convert # Convert the Shapefiles to GeoJSON using ogr2ogr.
+make generate # Convert the GeoJSON to Mapbox Vector Tiles using tippecanoe.
+make tileserver-gl # Run tileserver-gl-light.
 ```
 
 ---
 
 # Result
 
-Access to http://<your ip>:8000/
+Open http://<your ip>:8000/
 
 ![height:300px](./images/14_2_tileserver-gl.png)
 
@@ -663,8 +662,8 @@ convert:
 
 # 9 outputs
 
-- ogr2ogr convert Shapefile to GeoJSON.
-  - Notes: Those Shapefiles are not included .prj file.
+- ogr2ogr converts the Shapefiles to GeoJSON.
+  - Note: These Shapefiles don't include a .prj file, so the SRS is specified explicitly.
 
 ---
 
@@ -698,21 +697,21 @@ generate:
 
 # 2 outputs
 
-- tippecanoe runs 2 times and generate 2 outputs.
+- tippecanoe runs twice and generates 2 outputs.
   - .mbtiles file
-    - SQLite database file.
-    - Contains vector tile.
+    - An SQLite database file.
+    - Contains vector tiles.
   - .pmtiles file
-    - "Cloud Native" format.
-    - You can host .pmtiles as static file.
+    - A "Cloud Native" format.
+    - You can host .pmtiles as a static file.
 
 ---
 
 # MBTiles - SQLite database
 
-- MBTiles is container of tile.
-  - MBTiles is single file database(SQLite).
-  - TMS schema.
+- MBTiles is a container for tiles.
+  - MBTiles is a single-file database (SQLite).
+  - Uses the TMS scheme.
 
 ![height:300px](./images/15_mbtiles.png)
 
@@ -730,8 +729,8 @@ tileserver-gl:
 # PMTiles - Cloud Native format
 
 - PMTiles is similar to MBTiles.
-  - "Cloud Native" format.
-  - You can easy to convert mbtiles to pmtiles using `pmtiles` command.
+  - A "Cloud Native" format.
+  - You can easily convert MBTiles to PMTiles using the `pmtiles` command.
 
 ![height:300px](./images/16_pmtiles.png)
 
@@ -743,18 +742,18 @@ https://smellman.github.io/pmtiles-example/
 
 ---
 
-# Design tiled map
+# Designing a tiled map
 
-- Vector tile doesn't have a style.
-  - The client renders images with style settings.
-- In this presentation, we use `charites` to design tiled map.
-  - Charites convert Style Specification(JSON) to YAML.
-  - YAML is easy to read and write for human.
-  - YAML is easy to edit for beginners.
+- Vector tiles don't have a style.
+  - The client renders images based on style settings.
+- In this presentation, we use `charites` to design a tiled map.
+  - Charites converts between the Style Specification (JSON) and YAML.
+  - YAML is easy for humans to read and write.
+  - YAML is easy for beginners to edit.
 
 ---
 
-# Try to edit style
+# Try editing the style
 
 ```bash
 cd ~/jica_scripts/vector_tile
@@ -762,7 +761,7 @@ sudo make practice
 ```
 Open http://<your ip>:8000/ in your browser.
 
-Open other terminal and run following command.
+Open another terminal and run the following commands.
 
 ```bash
 cd ~/jica_scripts/vector_tile
@@ -774,17 +773,17 @@ nano style-practice.yml
 # nano
 
 - nano is a simple text editor.
-  - nano is easy to use for begineer.
-- Ctrl + O: Save file
+  - nano is easy to use for beginners.
+- Ctrl + O: Save the file
 - Ctrl + X: Exit nano
 
 ![bg right 50%](./images/17_nano.png)
 
 ---
 
-# Remove comments on layers
+# Uncomment the layers
 
-Remove comments in style-practice.yml.
+Remove the `#` comment markers in style-practice.yml.
 
 ```yaml
 layers:
@@ -801,7 +800,7 @@ layers:
 
 ---
 
-# Layers in Maplibre Style Specification
+# Layers in the MapLibre Style Specification
 
 - Background
 - Fill
@@ -811,7 +810,7 @@ layers:
 - Raster
 - Hillshade
 - Fill Extrusion
-  - It used for 3D rendering.
+  - Used for 3D rendering.
 
 https://maplibre.org/maplibre-style-spec/
 
@@ -841,8 +840,8 @@ paint:
   fill-color: '#f2efe9'
 ```
 
-- source: global_map means "global_map" source in sources section.
-- source-layer: polbnda means "polbnda" layer in global_map source.
+- `source: global_map` refers to the "global_map" source in the sources section.
+- `source-layer: polbnda` refers to the "polbnda" layer in the global_map source.
 
 ![bg right 100%](./images/19_fill_layer.png)
 
@@ -872,10 +871,10 @@ paint:
 
 # Line layer
 
-- Draw line with polyline features.
-  - Normal line.
-  - Dash-array line.
-    - Following example is Normal line + Dash-array line.
+- Draws lines from polyline features.
+  - Solid lines
+  - Dashed lines (line-dasharray)
+    - The following example combines a solid line and a dashed line.
   
 ![](./images/21_dash-array.png)
 
@@ -883,9 +882,9 @@ paint:
 
 # Filter
 
-roadl-primary.yml and roadl-secondary.yml use filter.
+roadl-primary.yml and roadl-secondary.yml use filters.
 
-roadl-primary.yml use following filter.
+roadl-primary.yml uses the following filter.
 
 ```yaml
 filter:
@@ -895,16 +894,16 @@ filter:
     - '14'
 ```
 
-'rtt' is a field name in roadl layer and '14' is primary route.
+'rtt' is a field name in the roadl layer, and '14' means a primary route.
 
 ---
 
 # Zoom function
 
-- Zoom function is useful to change style dynamically.
-  - Set Zoom 6 to 1 and Zoom 10 to 6, the value will increase between Zoom 6 and 10.
-- "base" property will use to control the rate which the function output increases.
-  - "base = 1" will be increased linearly.
+- Zoom functions are useful for changing the style by zoom level.
+  - If you set 1 at zoom 6 and 6 at zoom 10, the value increases between zoom 6 and 10.
+- The "base" property controls the rate at which the function output increases.
+  - With "base = 1", the value increases linearly.
 
 https://maplibre.org/maplibre-style-spec/expressions/
 
@@ -931,11 +930,11 @@ layout:
 
 # Symbol layer
 
-- Draw symbol with point features.
+- Draws symbols for features.
   - Icon
   - Text
   - Text with icon
-- Allow Point, Polygon and Polyline features.
+- Supports point, polygon, and polyline features.
 
 ![height:300px](./images/23_symbol_layers_example.png)
 
@@ -943,21 +942,21 @@ layout:
 
 # icon-image and text-field
 
-- icon-image is a property of symbol layer.
-  - icon-image is a name of icon.
-    - icon-image is defined in sprite.
-- text-field is a property of symbol layer.
-  - text-field is a name of field in source data.
-    - It can use Feature Properties using {field_name}.
+- icon-image is a property of the symbol layer.
+  - icon-image is the name of an icon.
+    - Icons are defined in the sprite.
+- text-field is a property of the symbol layer.
+  - text-field specifies the text to display.
+    - You can reference feature properties with {field_name}.
 
 ---
 
 # text-offset
 
-- text-offset is a property of symbol layer.
-  - text-offset is a offset of text.
-    - It can use array of [x, y].
-    - x and y are offset from center of point.
+- text-offset is a property of the symbol layer.
+  - text-offset is the offset of the text.
+    - It takes an array of [x, y].
+    - x and y are offsets from the center of the point.
 
 ```yaml
 layout:
@@ -970,15 +969,15 @@ layout:
 
 ---
 
-# Convert your style via charites
+# Convert your style with charites
 
-Stop `make practice` command and run following command.
+Stop the `make practice` command and run the following command.
 
 ```bash
 make build
 ```
 
-`Makefile` is simple to run tasks.
+The `Makefile` makes it simple to run tasks.
 
 ```Makefile
 build:
@@ -1005,11 +1004,11 @@ Open http://<your ip>/vector/ in your browser.
 
 # Raster tile hosting (1)
 
-- If you use small number of data only, hosting as static image is easy.
+- If you have only a small amount of data, hosting tiles as static images is easy.
   - Use nginx or Apache HTTP Server.
   - Use AWS S3 or Google Cloud Storage.
-  - Github Pages is good for small data and free.
-    - Be careful to license of tile images.
+  - GitHub Pages is free and good for small data.
+    - Be careful about the license of the tile images.
 
 https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages
 
@@ -1017,12 +1016,12 @@ https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-
 
 # Raster tile hosting (2)
 
-- If you use large number of data, be careful to hosting.
-  - File system limitation: max number of files.
-    - Ext4 on Linux: 4,294,967,295 files(specified at filesystem creation time)
-  - File copy will take a long time.
-  - MBTiles is a solution to hosting large number of data.
-    - MBUtil is useful to create .mbtiles from tile images.
+- If you have a large amount of data, be careful when hosting it.
+  - File system limitation: maximum number of files.
+    - ext4 on Linux: up to 4,294,967,295 files (set when the file system is created)
+  - Copying files takes a long time.
+  - MBTiles is a solution for hosting large amounts of data.
+    - MBUtil is useful for creating .mbtiles from tile images.
 
 ```bash
 mb-util temp/ el.mbtiles 
@@ -1032,11 +1031,11 @@ mb-util temp/ el.mbtiles
 
 # Vector tile hosting - tileserver-gl
 
-- Tileserver GL is useful.
-  - But vector tiles needs SSL access in internet.
-  - Let's encrypt is useful to get SSL certificate.
+- TileServer GL is useful.
+  - However, vector tiles need HTTPS (SSL) access on the Internet.
+  - Let's Encrypt is useful for getting an SSL certificate.
     - https://letsencrypt.org/
-  - Setup frontend server(Apache/nginx/etc) and connect from server with reverse proxy.
+  - Set up a frontend server (Apache, nginx, etc.) and connect it to TileServer GL with a reverse proxy.
 
 ---
 
@@ -1048,7 +1047,7 @@ mb-util temp/ el.mbtiles
 
 # Reverse proxy setting
 
-- Nginx is easy to setup reverse proxy.
+- It is easy to set up a reverse proxy with nginx.
 
 ```nginx
 location / {
@@ -1063,21 +1062,21 @@ location / {
 
 # Server-side rendering
 
-- Tileserver GL can deliver raster tile if you host style.
-  - But rendering is slow.
-    - If you use this function, you should use cache server.
+- TileServer GL can deliver raster tiles if you host a style.
+  - However, rendering is slow.
+    - If you use this feature, you should use a cache server.
 
 ![bg right 100%](./images/26_tileserver-gl.png)
 
 ---
 
-# Tileserver GL - cache
+# TileServer GL - Cache
 
-- Use varnish cache for raster rendering.
+- Use Varnish Cache for raster rendering.
   - https://varnish-cache.org/
-- https://tile.openstreetmap.jp/ use varnish cache.
-  - 20 processs run.
-  - 20Core CPU and 64GB RAM.
+- https://tile.openstreetmap.jp/ uses Varnish Cache.
+  - Runs 20 processes.
+  - 20-core CPU and 64 GB RAM.
 
 ![bg right 100%](./images/27_cache.png)
 
@@ -1085,10 +1084,10 @@ location / {
 
 # Vector tile hosting - pmtiles
 
-- PMTiles is useful to hosting vector tile.
-  - PMTiles is "Cloud Native" format.
-  - PMTiles is easy to host as static file.
-    - Nginx / Apache / AWS S3 / Google Cloud Storage etc.
+- PMTiles is useful for hosting vector tiles.
+  - PMTiles is a "Cloud Native" format.
+  - PMTiles is easy to host as a static file.
+    - nginx / Apache / AWS S3 / Google Cloud Storage, etc.
 
 https://github.com/protomaps/PMTiles
 
@@ -1113,12 +1112,12 @@ if ($request_method = 'OPTIONS') {
 }
 ```
 
-see: https://github.com/smellman/pmtiles-example
+See: https://github.com/smellman/pmtiles-example
 
 ---
 
-# copyright
+# Copyright
 
 - This presentation is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
-- All pictures with OpenStreetMap images are licensed under [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0/).
+- All images containing OpenStreetMap data are licensed under [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0/).
   - © OpenStreetMap contributors
