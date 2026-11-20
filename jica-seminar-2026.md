@@ -936,7 +936,7 @@ layout:
   - Text with icon
 - Supports point, polygon, and polyline features.
 
-![height:300px](./images/23_symbol_layers_example.png)
+![bg right 80%](./images/23_symbol_layers_example.png)
 
 ---
 
